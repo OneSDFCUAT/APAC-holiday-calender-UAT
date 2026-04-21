@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UAT Holiday Calendars</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f2; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+  .wrap { max-width: 520px; width: 100%; }
+  h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #888; margin-bottom: 2rem; }
+  .card { display: block; text-decoration: none; background: #fff; border: 1px solid #e4e4e0; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; transition: border-color 0.15s, box-shadow 0.15s; }
+  .card:hover { border-color: #bbb; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+  .card-text { flex: 1; }
+  .card-title { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  .card-sub { font-size: 12px; color: #999; margin-top: 2px; }
+  .arrow { font-size: 18px; color: #ccc; }
+  .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>UAT Holiday Calendars</h1>
+  <p class="sub">27 April – 22 May 2026 &nbsp;·&nbsp; Select your region</p>
+
+  <a class="card" href="emea_holiday_calendar_uat.html">
+    <div class="dot" style="background:#1E8C5A;"></div>
+    <div class="card-text">
+      <div class="card-title">EMEA</div>
+      <div class="card-sub">Europe (excl. UK) &nbsp;·&nbsp; 14 testers</div>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <a class="card" href="apac_holiday_calendar_uat.html">
+    <div class="dot" style="background:#B87514;"></div>
+    <div class="card-text">
+      <div class="card-title">APAC</div>
+      <div class="card-sub">Asia Pacific &nbsp;·&nbsp; 9 testers</div>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <a class="card" href="americas_holiday_calendar_uat.html">
+    <div class="dot" style="background:#534AB7;"></div>
+    <div class="card-text">
+      <div class="card-title">Americas</div>
+      <div class="card-sub">USA &nbsp;·&nbsp; 9 testers</div>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <p class="footer">Tate & Lyle UAT Programme · Click any date in the calendar to add a holiday</p>
+</div>
+</body>
+</html>
