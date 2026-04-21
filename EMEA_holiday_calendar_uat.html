@@ -5,68 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EMEA Holiday Calendar — UAT</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f2; color: #1a1a1a; min-height: 100vh; padding: 2rem 1rem; }
-  .container { max-width: 860px; margin: 0 auto; }
-  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-  .cal-title { font-size: 20px; font-weight: 600; color: #1a1a1a; }
-  .region-badge { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 99px; background: #d0f0e4; color: #065040; letter-spacing: 0.04em; }
-  .controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; margin-top: 10px; gap: 8px; flex-wrap: wrap; }
-  .nav-group { display: flex; align-items: center; gap: 8px; }
-  .nav-btn { background: #fff; border: 1px solid #d4d4d0; border-radius: 8px; padding: 6px 14px; font-size: 14px; cursor: pointer; color: #1a1a1a; }
-  .nav-btn:hover { background: #f0f0ec; }
-  .month-label { font-size: 15px; font-weight: 600; min-width: 140px; text-align: center; color: #1a1a1a; }
-  .day-names { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-bottom: 3px; }
-  .day-name { font-size: 11px; font-weight: 600; color: #888; text-align: center; padding: 4px 0; text-transform: uppercase; letter-spacing: 0.05em; }
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-  .cal-cell { min-height: 72px; border: 1px solid #e4e4e0; border-radius: 8px; padding: 5px; background: #fff; cursor: pointer; position: relative; transition: border-color 0.15s; }
-  .cal-cell:hover { border-color: #b0b0a8; }
-  .cal-cell.other-month { background: #f5f5f2; opacity: 0.5; pointer-events: none; }
-  .cal-cell.today { border-color: #0f6e56; }
-  .date-num { font-size: 11px; font-weight: 600; color: #888; }
-  .cal-cell.today .date-num { color: #0f6e56; }
-  .htag { font-size: 9px; font-weight: 600; margin-top: 2px; padding: 2px 4px; border-radius: 3px; display: block; line-height: 1.3; word-break: break-word; }
-  .htag.regional { background: #9fe1cb; color: #085041; }
-  .htag.company { background: #cecbf6; color: #3c3489; }
-  .htag.personal { background: #fac775; color: #633806; }
-  .add-btn { position: absolute; bottom: 3px; right: 3px; width: 17px; height: 17px; border-radius: 50%; background: none; border: 1px solid #d4d4d0; color: #aaa; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; line-height: 1; }
-  .cal-cell:hover .add-btn { opacity: 1; }
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 100; }
-  .modal { background: #fff; border: 1px solid #d4d4d0; border-radius: 12px; padding: 1.5rem; width: 340px; max-width: 95vw; box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
-  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; color: #1a1a1a; }
-  .modal label { font-size: 12px; color: #666; display: block; margin-bottom: 3px; }
-  .modal input, .modal select, .modal textarea { width: 100%; margin-bottom: 10px; font-size: 13px; padding: 7px 10px; border: 1px solid #d4d4d0; border-radius: 7px; font-family: inherit; color: #1a1a1a; background: #fff; }
-  .modal textarea { height: 60px; resize: none; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
-  .btn-cancel { background: none; border: 1px solid #d4d4d0; border-radius: 8px; padding: 7px 16px; font-size: 13px; cursor: pointer; color: #1a1a1a; }
-  .btn-save { background: #0f6e56; border: none; border-radius: 8px; padding: 7px 16px; font-size: 13px; cursor: pointer; color: #fff; font-weight: 600; }
-  .btn-save:hover { opacity: 0.88; }
-  .btn-cancel:hover { background: #f0f0ec; }
-  .section { margin-top: 1.5rem; }
-  .section-title { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #666; }
-  .ldot { width: 9px; height: 9px; border-radius: 50%; }
-  .h-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .h-table th { text-align: left; padding: 6px 8px; font-weight: 600; color: #888; border-bottom: 1px solid #e4e4e0; }
-  .h-table td { padding: 6px 8px; border-bottom: 1px solid #e4e4e0; color: #1a1a1a; vertical-align: middle; }
-  .h-table tr:last-child td { border-bottom: none; }
-  .badge { font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 600; }
-  .badge.regional { background: #d0f0e4; color: #065040; }
-  .badge.company { background: #eeedfe; color: #3c3489; }
-  .badge.personal { background: #faeeda; color: #633806; }
-  .del-btn { background: none; border: none; cursor: pointer; color: #bbb; font-size: 13px; padding: 2px 5px; border-radius: 4px; }
-  .del-btn:hover { background: #f0f0ec; color: #333; }
-  .empty-msg { font-size: 13px; color: #aaa; padding: 8px 0; }
-  .tester-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.75rem; }
-  .chip { font-size: 11px; padding: 3px 10px; border-radius: 99px; background: #f0f0ec; border: 1px solid #e4e4e0; color: #555; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f2; color: #1a1a1a; min-height: 100vh; padding: 2rem 1rem; }
+.container { max-width: 860px; margin: 0 auto; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.cal-title { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+.region-badge { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 99px; background: #d0f0e4; color: #065040; letter-spacing: 0.04em; }
+.controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+.nav-group { display: flex; align-items: center; gap: 8px; }
+.nav-btn { background: #fff; border: 1px solid #d4d4d0; border-radius: 8px; padding: 6px 14px; font-size: 14px; cursor: pointer; color: #1a1a1a; }
+.nav-btn:hover { background: #f0f0ec; }
+.month-label { font-size: 15px; font-weight: 600; min-width: 140px; text-align: center; color: #1a1a1a; }
+.day-names { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-bottom: 3px; }
+.day-name { font-size: 11px; font-weight: 600; color: #888; text-align: center; padding: 4px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+.cal-cell { min-height: 72px; border: 1px solid #e4e4e0; border-radius: 8px; padding: 5px; background: #fff; cursor: pointer; position: relative; transition: border-color 0.15s; }
+.cal-cell:hover { border-color: #b0b0a8; }
+.cal-cell.other-month { background: #f5f5f2; opacity: 0.5; pointer-events: none; }
+.cal-cell.today { border-color: #0f6e56; }
+.date-num { font-size: 11px; font-weight: 600; color: #888; }
+.cal-cell.today .date-num { color: #0f6e56; }
+.htag { font-size: 9px; font-weight: 600; margin-top: 2px; padding: 2px 4px; border-radius: 3px; display: block; line-height: 1.3; word-break: break-word; }
+.htag.regional { background: #9fe1cb; color: #085041; }
+.htag.company { background: #cecbf6; color: #3c3489; }
+.htag.personal { background: #fac775; color: #633806; }
+.add-btn { position: absolute; bottom: 3px; right: 3px; width: 17px; height: 17px; border-radius: 50%; background: none; border: 1px solid #d4d4d0; color: #aaa; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; line-height: 1; }
+.cal-cell:hover .add-btn { opacity: 1; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal { background: #fff; border: 1px solid #d4d4d0; border-radius: 12px; padding: 1.5rem; width: 340px; max-width: 95vw; box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+.modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; color: #1a1a1a; }
+.modal label { font-size: 12px; color: #666; display: block; margin-bottom: 3px; }
+.modal input, .modal select, .modal textarea { width: 100%; margin-bottom: 10px; font-size: 13px; padding: 7px 10px; border: 1px solid #d4d4d0; border-radius: 7px; font-family: inherit; color: #1a1a1a; background: #fff; }
+.modal textarea { height: 60px; resize: none; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+.btn-cancel { background: none; border: 1px solid #d4d4d0; border-radius: 8px; padding: 7px 16px; font-size: 13px; cursor: pointer; color: #1a1a1a; }
+.btn-save { background: #0f6e56; border: none; border-radius: 8px; padding: 7px 16px; font-size: 13px; cursor: pointer; color: #fff; font-weight: 600; }
+.btn-save:hover { opacity: 0.88; }
+.btn-cancel:hover { background: #f0f0ec; }
+.section { margin-top: 1.5rem; }
+.section-title { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #666; }
+.ldot { width: 9px; height: 9px; border-radius: 50%; }
+.h-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.h-table th { text-align: left; padding: 6px 8px; font-weight: 600; color: #888; border-bottom: 1px solid #e4e4e0; }
+.h-table td { padding: 6px 8px; border-bottom: 1px solid #e4e4e0; color: #1a1a1a; vertical-align: middle; }
+.h-table tr:last-child td { border-bottom: none; }
+.badge { font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 600; }
+.badge.regional { background: #d0f0e4; color: #065040; }
+.badge.company { background: #eeedfe; color: #3c3489; }
+.badge.personal { background: #faeeda; color: #633806; }
+.del-btn { background: none; border: none; cursor: pointer; color: #bbb; font-size: 13px; padding: 2px 5px; border-radius: 4px; }
+.del-btn:hover { background: #f0f0ec; color: #333; }
+.empty-msg { font-size: 13px; color: #aaa; padding: 8px 0; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="top-bar">
     <span class="cal-title">Holiday calendar</span>
-    <span class="region-badge">EMEA — Europe</span>
+    <span class="region-badge">EMEA — Europe (excl. UK)</span>
   </div>
   <div class="controls">
     <div class="nav-group">
@@ -83,18 +81,13 @@
   <div class="cal-grid" id="cal-grid"></div>
   <div class="section">
     <div class="legend">
-      <div class="legend-item"><div class="ldot" style="background:#9fe1cb;"></div> Europe / regional</div>
-      <div class="legend-item"><div class="ldot" style="background:#cecbf6;"></div> Company day</div>
+      <div class="legend-item"><div class="ldot" style="background:#9fe1cb;"></div> Bank Holiday</div>
       <div class="legend-item"><div class="ldot" style="background:#fac775;"></div> Personal leave</div>
     </div>
   </div>
   <div class="section">
     <div class="section-title">Holidays this month</div>
     <div id="hlist"></div>
-  </div>
-  <div class="section">
-    <div class="section-title">EMEA — Europe UAT testers</div>
-    <div class="tester-chips" id="tester-chips"></div>
   </div>
 </div>
 
@@ -105,8 +98,7 @@
     <input type="text" id="h-name" placeholder="e.g. National Day" />
     <label>Type</label>
     <select id="h-type">
-      <option value="regional">Regional / public holiday</option>
-      <option value="company">Company day</option>
+      <option value="regional">Bank Holiday</option>
       <option value="personal">Personal leave</option>
     </select>
     <label>Notes (optional)</label>
@@ -119,16 +111,14 @@
 </div>
 
 <script>
-const TESTERS = ["Pierre Mauger", "Carsten Druener", "Silke Schnabl", "Andrea de Groot", "Emma Wang", "Jack Pearson", "Els De Vos", "Nika Abdo", "Olaf Kohnke", "Stephanie Dupuy", "Nico Erler", "Eric Goron", "Olivia Haentsch", "Audrey Perignon"];
 const PUBLIC_HOLIDAYS = {"2026-05-04": [{"name": "Early May Bank Holiday", "type": "regional", "notes": "UK"}], "2026-05-25": [{"name": "Spring Bank Holiday", "type": "regional", "notes": "UK"}]};
 const userHolidays = {};
 let curYear = new Date().getFullYear();
 let curMonth = new Date().getMonth();
 let selectedDate = null;
 const today = new Date();
-const TAG_BG = '#9fe1cb'; const TAG_TEXT = '#085041';
 const typeStyle = {
-  regional:{bg:TAG_BG,text:TAG_TEXT},
+  regional:{bg:'#9fe1cb',text:'#085041'},
   company:{bg:'#cecbf6',text:'#3c3489'},
   personal:{bg:'#fac775',text:'#633806'},
 };
@@ -154,7 +144,7 @@ function renderCalendar(){
     cell.addEventListener('click',()=>openModal(d));grid.appendChild(cell);
   }
   const rem=42-first-dim;for(let i=1;i<=rem;i++){const c=document.createElement('div');c.className='cal-cell other-month';c.innerHTML=`<span class="date-num">${i}</span>`;grid.appendChild(c);}
-  renderList();renderTesters();
+  renderList();
 }
 function renderList(){
   const body=document.getElementById('hlist');
@@ -165,10 +155,9 @@ function renderList(){
   body.innerHTML=`<table class="h-table"><thead><tr><th>Date</th><th>Holiday</th><th>Coverage</th><th>Type</th><th></th></tr></thead><tbody>`+
     rows.map(r=>{
       const isUser=!!(userHolidays[r.k]&&userHolidays[r.k].indexOf(r.h)>-1);
-      return `<tr><td>${months[curMonth]} ${r.d}</td><td>${r.h.name}${r.h.notes?`<br><span style="font-size:10px;color:#999;">${r.h.notes}</span>`:''}</td><td style="font-size:11px;color:#888;">${r.h.notes||'—'}</td><td><span class="badge ${r.h.type}">${r.h.type==='regional'?'Regional/public':r.h.type==='company'?'Company':'Personal'}</span></td><td>${isUser?`<button class="del-btn" onclick="deleteEntry('${r.k}',this)">&#10005;</button>`:'<span style="color:#ccc;font-size:10px;">preset</span>'}</td></tr>`;
+      return `<tr><td>${months[curMonth]} ${r.d}</td><td>${r.h.name}${r.h.notes?`<br><span style="font-size:10px;color:#999;">${r.h.notes}</span>`:''}</td><td style="font-size:11px;color:#888;">${r.h.notes||'—'}</td><td><span class="badge ${r.h.type}">${r.h.type==='regional'?'Bank Holiday':'Personal leave'}</span></td><td>${isUser?`<button class="del-btn" onclick="deleteEntry('${r.k}',this)">&#10005;</button>`:'<span style="color:#ccc;font-size:10px;">preset</span>'}</td></tr>`;
     }).join('')+'</tbody></table>';
 }
-function renderTesters(){document.getElementById('tester-chips').innerHTML=TESTERS.map(t=>`<span class="chip">${t}</span>`).join('');}
 function deleteEntry(k,btn){
   const row=btn.closest('tr');const name=row.cells[1].textContent.split('\n')[0];
   if(userHolidays[k]){const idx=userHolidays[k].findIndex(h=>h.name===name);if(idx>-1){userHolidays[k].splice(idx,1);renderCalendar();}}
